@@ -1,0 +1,64 @@
+{
+  "name": "hub-manager",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "hub-manager/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/hub-manager",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "hub-manager/src/main.ts",
+        "tsConfig": "hub-manager/tsconfig.app.json",
+        "assets": ["hub-manager/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "hub-manager:build",
+        "inspect": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "hub-manager:build:development"
+        },
+        "production": {
+          "buildTarget": "hub-manager:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["hub-manager/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

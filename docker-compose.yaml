@@ -1,0 +1,13 @@
+version: '3'
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    ports:
+      - '1883:1883'
+      - '9001:9001'
+    volumes:
+      - './mosquitto.conf:/mosquitto/config/mosquitto.conf'
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'

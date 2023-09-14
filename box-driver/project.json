@@ -1,0 +1,64 @@
+{
+  "name": "box-driver",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "box-driver/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/box-driver",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "box-driver/src/main.ts",
+        "tsConfig": "box-driver/tsconfig.app.json",
+        "assets": ["box-driver/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "box-driver:build",
+        "inspect": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "box-driver:build:development"
+        },
+        "production": {
+          "buildTarget": "box-driver:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["box-driver/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
