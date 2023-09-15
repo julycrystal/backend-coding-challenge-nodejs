@@ -6,7 +6,9 @@ import mercuriusCodegen, { gql } from 'mercurius-codegen';
 
 const lastHeartBeatDate = 'lastHeartBeatDate';
 const hubOpenTopic = 'hub/open';
+const hubCloseTopic = 'hub/close';
 const hubOpenedTopic = 'hub/opened';
+const hubClosedTopic = 'hub/closed';
 
 const isDateDiffInRange = (now: Date | string | number, last: Date | string | number, range: number) => {
   const nowInMilli = Number(now);
@@ -63,7 +65,23 @@ const resolvers: IResolvers = {
               resolve(false);
             }
           }
-        }).publish(hubOpenTopic, 'id field', { qos: 2 });
+        }).publish(hubOpenTopic, 'id', { qos: 2 });
+      });
+    },
+    async close(root, args, ctx) {
+      return new Promise((resolve) => {
+        ctx.mqtt.subscribe(hubClosedTopic, (error, granted) => {
+          console.log('Subscribed to hubClosed topic');
+        }).on('message', (topic, payload) => {
+          if (topic === hubClosedTopic) {
+            const result = payload.toString();
+            if (result === 'success') {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          }
+        }).publish(hubCloseTopic, 'id', { qos: 2 });
       });
     },
   },
